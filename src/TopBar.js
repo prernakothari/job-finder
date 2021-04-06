@@ -15,6 +15,13 @@ import Brightness3Icon from '@material-ui/icons/Brightness3';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        height: theme.spacing(14),
+        backgroundColor: "#F5F6F8"
+    },
+    toolbar: {
+        height: theme.spacing(14),
+        backgroundColor: "#5865E0",
+        "border-bottom-left-radius": "55px"
     },
     title: {
         flexGrow: 1,
@@ -69,8 +76,8 @@ export default function TopBar() {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
+            <AppBar position="static" className={classes.root}>
+                <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" className={classes.title}>
                         Dev Jobs
                     </Typography>
