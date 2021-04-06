@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
+import "./JobTile.css";
 
 // is location is a number (US zip code), we could use zip static for obtaining City, State in US
 
@@ -13,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
     root: {
         textAlign: "left",
         minWidth: 275,
+        position: "relative",
+        top: - theme.spacing(3.5),
     },
     bullet: {
         display: 'inline-block',
@@ -20,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
         transform: 'scale(0.8)',
     },
     title: {
+        marginTop: theme.spacing(3.5),
         fontSize: 14,
     },
     pos: {
@@ -31,7 +35,9 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 16,
         height: theme.spacing(7),
         width: theme.spacing(7),
+        zIndex: 2,
     },
+
 }));
 
 function TimeAgo(created_at) {
@@ -83,7 +89,7 @@ export default function JobTile({ title, type, created_at, company_logo, company
 
     return (
         <div>
-            <Avatar variant="rounded" src={company_logo} className={classes.logo} />
+            <Avatar variant="rounded" src={company_logo} sx={{ ".MuiAvatar-img": "contain" }} className={classes.logo} />
             <Card className={classes.root}>
                 <CardContent>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
