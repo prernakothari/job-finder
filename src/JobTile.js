@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
     logo: {
         backgroundColor: "#FFFFFF",
         marginLeft: 16,
-        marginTop: 16,
         height: theme.spacing(7),
         width: theme.spacing(7),
         zIndex: 2,
@@ -95,7 +94,7 @@ export default function JobTile({ title, type, created_at, company_logo, company
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
                         {timeAgo}   {bull}   {type}
                     </Typography>
-                    <Typography variant="h5" component="h2">
+                    <Typography variant="h6" component="h6">
                         {title}
                     </Typography>
                     <Typography className={classes.pos} color="textSecondary">
