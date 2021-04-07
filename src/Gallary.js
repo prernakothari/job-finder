@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { fade, makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import JobTile from "./JobTile";
@@ -27,17 +26,6 @@ const useStyles = makeStyles((theme) => ({
     },
     grow: {
         flexGrow: 1
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
     },
     searchBar: {
         backgroundColor: "#FFFFFF",
@@ -116,23 +104,23 @@ export default function Gallery() {
         history.push(query)
         setPath(query)
     }
-    useEffect(() => {
-        if (path !== location.search)
-            setPath(location.search)
-        let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
-        fetch(url)
-            .then(
-                response => {
-                    return response.json()
-                })
-            .then(
-                data => {
-                    setData(data);
-                    console.log(data)
-                }
-            )
-            .catch(e => console.log(e))
-    }, [path])
+    // useEffect(() => {
+    //     if (path !== location.search)
+    //         setPath(location.search)
+    //     let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
+    //     fetch(url)
+    //         .then(
+    //             response => {
+    //                 return response.json()
+    //             })
+    //         .then(
+    //             data => {
+    //                 setData(data);
+    //                 console.log(data)
+    //             }
+    //         )
+    //         .catch(e => console.log(e))
+    // }, [path])
 
     const classes = useStyles();
     return (

@@ -4,7 +4,7 @@ import {
   Route,
 } from "react-router-dom";
 
-import Job from "./Job";
+import JobDetails from "./JobPost";
 import Gallary from "./Gallary"
 import TopBar from "./TopBar";
 
@@ -15,7 +15,7 @@ export default function App() {
       <TopBar />
       <Switch>
         <Route path="/positions">
-          <Job />
+          <JobDetails />
         </Route>
         <Route path="/">
           <Gallary />
