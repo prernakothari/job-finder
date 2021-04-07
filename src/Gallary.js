@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -96,25 +96,43 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Gallery() {
     let [path, setPath] = useState("")
+    let [fullTimeFilter, setFullTimeFilter] = useState(false)
+    let [description, setDescription] = useState("")
+    let [locationQuery, setLocationQuery] = useState("")
     let [data, setData] = useState(testData())
     let location = useLocation();
+    let history = useHistory();
 
-    // useEffect(() => {
-    //     setPath(location.search)
-    //     let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
-    //     fetch(url)
-    //         .then(
-    //             response => {
-    //                 return response.json()
-    //             })
-    //         .then(
-    //             data => {
-    //                 setData(data);
-    //                 console.log(data)
-    //             }
-    //         )
-    //         .catch(e => console.log(e))
-    // }, [path])
+    const handleSubmit = () => {
+        let desc = description.split(" ").join("+")
+        let locQ = locationQuery.split(" ").join("+")
+        let query = "positions.json?"
+        if (description)
+            query += "description=" + desc
+        if (locationQuery)
+            query += "&location=" + locQ
+        if (fullTimeFilter)
+            query += "&full_time=true"
+        history.push(query)
+        setPath(query)
+    }
+    useEffect(() => {
+        if (path !== location.search)
+            setPath(location.search)
+        let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
+        fetch(url)
+            .then(
+                response => {
+                    return response.json()
+                })
+            .then(
+                data => {
+                    setData(data);
+                    console.log(data)
+                }
+            )
+            .catch(e => console.log(e))
+    }, [path])
 
     const classes = useStyles();
     return (
@@ -137,6 +155,7 @@ export default function Gallery() {
                                             }}
                                             inputProps={{ 'aria-label': 'search' }}
                                             fullWidth={true}
+                                            onChange={(e) => { setDescription(e.target.value) }}
                                         />
                                     </div>
                                 </Grid>
@@ -153,6 +172,7 @@ export default function Gallery() {
                                                 input: classes.inputInput,
                                             }}
                                             inputProps={{ 'aria-label': 'search' }}
+                                            onChange={(e) => { setLocationQuery(e.target.value) }}
                                         />
                                     </div>
                                 </Grid>
@@ -164,15 +184,15 @@ export default function Gallery() {
                                         control={
                                             <Checkbox
                                                 className={classes.checkbox}
-                                                // checked={state.checkedA}
-                                                // onChange={handleChange}
+                                                checked={fullTimeFilter}
+                                                onChange={(e) => { setFullTimeFilter(e.target.checked) }}
                                                 color="primary"
                                                 inputProps={{ 'aria-label': 'secondary checkbox', "font-weight": "bold" }}
                                                 name="checkedA" />
                                         }
                                         label="Full Time Only"
                                     />
-                                    <Button >Search</Button>
+                                    <Button onClick={handleSubmit} >Search</Button>
                                 </Grid>
                             </Grid>
                         </Toolbar>
