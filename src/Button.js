@@ -18,3 +18,13 @@ export const PurpleButton = withStyles((theme) => ({
         },
     }
 }))(Button)
+
+export const LightPurpleButton = withStyles((theme) => ({
+    root: {
+        color: "black",
+        backgroundColor: "#CECFF6",
+        '&:hover': {
+            backgroundColor: purple[500]
+        },
+    }
+}))(Button)

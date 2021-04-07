@@ -12,7 +12,8 @@ import Avatar from '@material-ui/core/Avatar';
 import "./JobTile.css";
 import testData from "./testData"
 import { TimeAgo } from "./Utils"
-import { PurpleButton } from "./Button"
+import { PurpleButton, LightPurpleButton } from "./Button"
+import { useLocation } from "react-router-dom"
 // is location is a number (US zip code), we could use zip static for obtaining City, State in US
 
 const useStyles = makeStyles((theme) => ({
@@ -40,38 +41,89 @@ const useStyles = makeStyles((theme) => ({
     },
     logo: {
         backgroundColor: "#FFFFFF",
-        marginLeft: 16,
-        height: theme.spacing(7),
-        width: theme.spacing(7),
+        height: theme.spacing(10),
+        width: theme.spacing(10),
         zIndex: 2,
     },
     applyNowButton: {
-        float: "right"
+        float: "right",
+        width: "100%"
+    },
+    JobDetailsHeading: {
+        height: theme.spacing(10)
+    },
+    companyHeading: {
+        paddingLeft: theme.spacing(3)
+    },
+    companySiteButton: {
+        marginRight: theme.spacing(3)
+    },
+    howToApplyCard: {
+        marginTop: theme.spacing(3),
+        backgroundColor: "#5865E0",
+        color: "#FFFFFF"
     }
 
 }));
 
 export default function JobDetails() {
+    let [path, setPath] = useState("")
     let [jobData, setJobDetails] = useState(testData()[0])
     let timeAgo = TimeAgo(jobData.created_at)
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
+    const location = useLocation();
+
+    useEffect(() => {
+        console.log(location)
+        if (path !== location.pathname)
+            setPath(location.pathname)
+        let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/" + location.pathname + ".json"
+        fetch(url)
+            .then(
+                response => {
+                    return response.json()
+                })
+            .then(
+                jobData => {
+                    setJobDetails(jobData);
+                    console.log(jobData)
+                }
+            )
+            .catch(e => console.log(e))
+    }, [path])
+
     return (
         <div>
             <div className={classes.root}>
                 <Container fixed>
-                    <Card>
-                        <CardHeader
-                            avatar={
-                                <Avatar variant="rounded" src={jobData.company_logo} className={classes.logo} />
-                            }
-                            action={
-                                <PurpleButton href={jobData.company_url} aria-label="Company Site"> Company Site
-                                </PurpleButton>
-                            }
-                            title={jobData.company}
-                            subheader={jobData.company_url}
-                        />
+                    <Card className={classes.JobDetailsHeading}>
+                        <Grid container direction="row" justify="space-between" alignItems="center">
+                            <Grid item>
+                                <Grid container direction="row" alignItems="center">
+                                    <Grid item >
+                                        <Avatar variant="rounded" src={jobData.company_logo} className={classes.logo} />
+                                    </Grid>
+                                    <Grid item>
+                                        <Grid container direction="column" className={classes.companyHeading}>
+                                            <Grid item>
+                                                <Typography>
+                                                    {jobData.company}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item>
+                                                <Typography>
+                                                    {jobData.company_url}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item>
+                                <LightPurpleButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</LightPurpleButton>
+                            </Grid>
+                        </Grid>
                     </Card>
                     <Card className={classes.details}>
                         <CardContent>
@@ -98,6 +150,17 @@ export default function JobDetails() {
                             </Grid>
                             <Typography color="textPrimary">
                                 <div dangerouslySetInnerHTML={{ __html: jobData.description }} />
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                    <Card className={classes.howToApplyCard}>
+                        <CardContent>
+                            <Typography variant="h6" component="h6">
+                                How to Apply?
+                            </Typography>
+
+                            <Typography >
+                                <div dangerouslySetInnerHTML={{ __html: jobData.how_to_apply }} />
                             </Typography>
                         </CardContent>
                     </Card>

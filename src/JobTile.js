@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import "./JobTile.css";
 import { TimeAgo } from "./Utils"
+import { useHistory } from "react-router-dom";
 // is location is a number (US zip code), we could use zip static for obtaining City, State in US
 
 const useStyles = makeStyles((theme) => ({
@@ -39,16 +40,19 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function JobTile({ title, type, created_at, company_logo, company, location }) {
+export default function JobTile({ title, type, created_at, company_logo, company, location, url }) {
     let timeAgo = TimeAgo(created_at)
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
-
+    const history = useHistory();
+    const handleClick = () => {
+        history.push("/positions/" + url.split("/").pop());
+    }
 
     return (
         <div>
             <Avatar variant="rounded" src={company_logo} sx={{ ".MuiAvatar-img": "contain" }} className={classes.logo} />
-            <Card className={classes.root}>
+            <Card className={classes.root} onClick={handleClick}>
                 <CardContent>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
                         {timeAgo}   {bull}   {type}
