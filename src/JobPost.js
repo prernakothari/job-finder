@@ -73,6 +73,8 @@ export default function JobDetails() {
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
     const location = useLocation();
+    let pattern = new RegExp(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig)
+    let applyLink = pattern.exec(jobData.how_to_apply)
 
     useEffect(() => {
         console.log(location)
@@ -143,7 +145,7 @@ export default function JobDetails() {
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={4} lg={8}>
-                                    <PurpleButton className={classes.applyNowButton}>
+                                    <PurpleButton className={classes.applyNowButton} href={applyLink}>
                                         Apply Now
                                     </PurpleButton>
                                 </Grid>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,6 +18,10 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         height: theme.spacing(14),
         backgroundColor: "#F5F6F8"
+    },
+    homeNav: {
+        color: "#FFFFFF",
+        "text-decoration": "none"
     },
     toolbar: {
         height: theme.spacing(14),
@@ -79,7 +84,7 @@ export default function TopBar() {
             <AppBar position="static" className={classes.root}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" className={classes.title}>
-                        Dev Jobs
+                        <Link to={"/"} className={classes.homeNav} >Dev Jobs</Link>
                     </Typography>
                     <Typography component="div">
                         <Grid component="label" container alignItems="center" spacing={1}>

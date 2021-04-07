@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         position: "relative",
         top: - theme.spacing(3.5),
+        '&:hover': {
+            "cursor": "pointer"
+        }
     },
     bullet: {
         display: 'inline-block',
