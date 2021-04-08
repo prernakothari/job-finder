@@ -184,7 +184,7 @@ export default function Gallery({ themeType }) {
                 </Typography>
             }
         >
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
                 {jobPostings.map(item =>
                     <Grid item xs={12} sm={6} lg={4}>
                         <JobTile themeType={themeType} {...item} />
@@ -259,8 +259,8 @@ export default function Gallery({ themeType }) {
                             </Grid>
                         </Grid>
                     </Card>
+                    {JobCards}
                 </Container>
-                {JobCards}
             </div>
         </div>
     );

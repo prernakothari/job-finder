@@ -18,6 +18,7 @@ export default function JobTile({ themeType, title, type, created_at, company_lo
         root: {
             textAlign: "left",
             minWidth: 275,
+            height: 225,
             position: "relative",
             top: - theme.spacing(3.5),
             '&:hover': {
@@ -37,11 +38,12 @@ export default function JobTile({ themeType, title, type, created_at, company_lo
             color: themeType === "light" ? colors.mainDark : colors.mainLight,
         },
         pos: {
-            marginBottom: 12,
             color: themeType === "light" ? "black" : "white",
         },
         location: {
-            color: themeType === colors.purple
+            color: colors.purple,
+            position: "absolute",
+            bottom: theme.spacing(2)
         },
         logo: {
             backgroundColor: "white",
