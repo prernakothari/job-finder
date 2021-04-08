@@ -51,14 +51,29 @@ export default function JobDetails({ themeType }) {
             backgroundColor: colors.mainLight,
             height: theme.spacing(10),
             width: theme.spacing(10),
-            zIndex: 2,
+            [theme.breakpoints.down('xs')]: {
+                height: theme.spacing(7),
+                width: theme.spacing(7),
+            },
         },
         applyNowButton: {
             float: "right",
-            width: "100%"
+            width: "100%",
+            padding: theme.spacing(1, 3, 1, 3),
+        },
+        desktopVersion: {
+            display: "none",
+            [theme.breakpoints.up('sm')]: {
+                display: "block"
+            },
+        },
+        mobileVersion: {
+            display: "none",
+            [theme.breakpoints.down('xs')]: {
+                display: "block"
+            },
         },
         JobDetailsHeading: {
-            height: theme.spacing(10),
             backgroundColor: themeType === "light" ? colors.mainLight : colors.mainDark,
             color: themeType === "light" ? "black" : "white"
         },
@@ -66,7 +81,12 @@ export default function JobDetails({ themeType }) {
             paddingLeft: theme.spacing(3)
         },
         companySiteButton: {
-            marginRight: theme.spacing(3)
+            marginRight: theme.spacing(3),
+            [theme.breakpoints.down('xs')]: {
+                marginRight: 0,
+                marginBottom: theme.spacing(3),
+                marginTop: theme.spacing(3)
+            },
         },
         howToApplyCard: {
             marginTop: theme.spacing(3),
@@ -107,38 +127,66 @@ export default function JobDetails({ themeType }) {
             .catch(e => console.log(e))
     }, [path])
 
+    var DeskTopJobHeader = (
+        <Card className={`${classes.desktopVersion} ${classes.JobDetailsHeading}`}>
+            <Grid container direction="row" justify="space-between" alignItems="center">
+                <Grid item>
+                    <Grid container direction="row" alignItems="center">
+                        <Grid item >
+                            <Avatar variant="rounded" src={jobData.company_logo} className={classes.logo} />
+                        </Grid>
+                        <Grid item>
+                            <Grid container direction="column" className={classes.companyHeading}>
+                                <Grid item>
+                                    <Typography variant="h6" component="h6">
+                                        {jobData.company}
+                                    </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Typography>
+                                        {jobData.company_url}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item>
+                    <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
+                </Grid>
+            </Grid>
+        </Card>
+    )
+
+    var MobileJobHeader = (
+        <Card className={`${classes.mobileVersion} ${classes.JobDetailsHeading}`}>
+            <Grid container direction="column" alignItems="center">
+                <Grid item >
+                    <Avatar variant="rounded" src={jobData.company_logo} className={classes.logo} />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h6" component="h6">
+                        {jobData.company}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <Typography>
+                        {jobData.company_url}
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
+                </Grid>
+            </Grid>
+        </Card >
+    )
+
     return (
         <div>
             <div className={classes.root}>
                 <Container fixed>
-                    <Card className={classes.JobDetailsHeading}>
-                        <Grid container direction="row" justify="space-between" alignItems="center">
-                            <Grid item>
-                                <Grid container direction="row" alignItems="center">
-                                    <Grid item >
-                                        <Avatar variant="rounded" src={jobData.company_logo} className={classes.logo} />
-                                    </Grid>
-                                    <Grid item>
-                                        <Grid container direction="column" className={classes.companyHeading}>
-                                            <Grid item>
-                                                <Typography>
-                                                    {jobData.company}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography>
-                                                    {jobData.company_url}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
-                            </Grid>
-                        </Grid>
-                    </Card>
+                    {DeskTopJobHeader}
+                    {MobileJobHeader}
                     <Card className={classes.details}>
                         <CardContent>
                             <Grid container direction="row" justify="space-between" alignItems="center" >
@@ -156,7 +204,7 @@ export default function JobDetails({ themeType }) {
                                         {jobData.location}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm={4} lg={8}>
+                                <Grid item xs={12} sm="auto" lg="auto">
                                     <PurpleButton className={classes.applyNowButton} href={applyLink}>
                                         Apply Now
                                     </PurpleButton>
