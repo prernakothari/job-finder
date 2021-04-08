@@ -2,23 +2,19 @@ import React, { useEffect, useState } from "react"
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardActions from '@material-ui/core/CardActions';
 import Container from '@material-ui/core/Container';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import "./JobTile.css";
-import testData from "./testData"
-import { TimeAgo } from "./Utils"
-import { PurpleButton, LightPurpleButton, DarkPurpleButton } from "./Button"
+import { TimeAgo } from "../helpers/Utils"
+import { PurpleButton, LightPurpleButton, DarkPurpleButton } from "./Buttons"
 import { useLocation } from "react-router-dom"
-import { colors } from "./constants"
-import axios from "axios"
-    // is location is a number (US zip code), we could use zip static for obtaining City, State in US
+import { colors } from "../helpers/constants"
+import axios from "axios";
 
-    ;
+// If location is a number (US zip code), we could use zip static for obtaining City, State in US
+
 
 export default function JobDetails({ themeType, setSpinner }) {
 

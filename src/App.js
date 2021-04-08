@@ -4,10 +4,10 @@ import {
   Route,
 } from "react-router-dom";
 
-import JobDetails from "./JobPost";
-import Gallary from "./Gallary"
-import TopBar from "./TopBar";
-import { colors } from "./constants";
+import JobDetails from "./components/JobPost";
+import Gallary from "./components/Gallary"
+import TopBar from "./components/TopBar";
+import { colors } from "./helpers/constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 

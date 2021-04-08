@@ -5,10 +5,11 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import "./JobTile.css";
-import { TimeAgo } from "./Utils"
+import { TimeAgo } from "../helpers/Utils"
 import { useHistory } from "react-router-dom";
-import { colors } from "./constants"
-// is location is a number (US zip code), we could use zip static for obtaining City, State in US
+import { colors } from "../helpers/constants"
+
+// If location is a number (US zip code), we could use zip static for obtaining City, State in US
 
 
 export default function JobTile({ themeType, title, type, created_at, company_logo, company, location, url }) {
@@ -70,7 +71,7 @@ export default function JobTile({ themeType, title, type, created_at, company_lo
 
     return (
         <div className={classes.main}>
-            <Avatar variant="rounded" src={company_logo} sx={{ ".MuiAvatar-img": "contain" }} className={classes.logo} />
+            <Avatar variant="rounded" src={company_logo} className={classes.logo} />
             <Card className={classes.root} onClick={handleClick}>
                 <CardContent >
                     <Typography className={classes.title} gutterBottom>
