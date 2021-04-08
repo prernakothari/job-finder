@@ -96,6 +96,11 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                 width: '25ch',
             },
         },
+        inputLocation: {
+            [theme.breakpoints.up('sm')]: {
+                paddingLeft: theme.spacing(1),
+            },
+        },
         checkboxForm: {
             padding: theme.spacing(0, 0, 0, 2),
         },
@@ -125,25 +130,46 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
     let [showMobileFilters, setShowMobileFilters] = useState(false)
     let [description, setDescription] = useState("")
     let [locationQuery, setLocationQuery] = useState("")
+    let [locationMode, setLocationMode] = useState("location") // location or geoLocation
     let [geoLocation, setGeoLocation] = useState(undefined)
     let [jobPostings, setJobPostings] = /* useState(testData()) */ useState([])
     let location = useLocation();
     let history = useHistory();
 
     const handleSubmit = () => {
+        setSpinner(true)
+        setJobPostings([])
         let desc = description.split(" ").join("+")
         let locQ = locationQuery.split(" ").join("+")
         let query = "positions.json?"
         if (description)
             query += "description=" + desc
-        if (locationQuery) {
-            query += "&location=" + locQ
+        if (locationMode === "location") {
+            if (locationQuery) {
+                query += "&location=" + locQ
+            }
+        } else if (geoLocation !== null && geoLocation !== undefined) {
+            query += `&lat=${geoLocation.latitude}&long=${geoLocation.longitude}`
         }
         if (fullTimeFilter)
             query += "&full_time=true"
         history.push(query)
         setPath(query)
-        setPage(0)
+        setPage(1)
+    }
+
+    const success = (response) => {
+        setJobPostings([...jobPostings, ...response.data])
+        setFetchError("")
+        if (response.data.length > 0)
+            setShouldLoadNextPage(true)
+        else
+            setShouldLoadNextPage(false)
+    }
+
+    const fail = (e) => {
+        setFetchError(e.message)
+        setShouldLoadNextPage(false)
     }
 
     const addToData = () => {
@@ -151,69 +177,90 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
             setPath(location.search)
 
         let url = `/cors-proxy/https://jobs.github.com/positions.json?page=${page + 1}` + location.search.substr(1, location.search.length)
-        setPage(page + 1)
         axios.get(url)
             .then(
-                response => {
-                    setJobPostings([...jobPostings, ...response.data])
-                    setFetchError("")
-                    if (response.data.length > 0)
-                        setShouldLoadNextPage(true)
-                    else
-                        setShouldLoadNextPage(false)
-                }
+                success
             )
-            .catch((e) => {
-                setFetchError(e.message)
-                setShouldLoadNextPage(false)
-            })
+            .catch(
+                fail
+            )
+        setPage(page + 1)
     }
 
-    if (path === "" && location.search === "") {
+    const handleGeoLocationSubmit = () => {
+        if (locationMode === "location") {
+            setLocationMode("geoLocation")
+            SetLocationNearMe()
+        }
+        else {
+            setLocationMode("location")
+        }
+    }
+
+    const handleLocationInput = (e) => {
+        if (locationMode === "geoLocation")
+            setLocationMode("location")
+        setLocationQuery(e.target.value)
+    }
+
+    const handleCheckBoxInput = (e) => {
+        setFullTimeFilter(e.target.checked)
+        if (e.target.checked)
+            handleSubmit()
+    }
+
+    const SetLocationNearMe = () => {
+        setSpinner(true)
         navigator.geolocation.getCurrentPosition((position) => {
-            let query = `positions.json?lat=${position.coords.latitude}&long=${position.coords.longitude}`
-            history.push(query)
-            setPath(query)
-            setPage(0)
+            setPage(1)
+            setLocationQuery('(using your location)')
             setGeoLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+            setSpinner(false)
         }, () => {
             setGeoLocation(null)
-            console.log("Unable to retrieve your location!")
+            setSpinner(false)
+            setLocationMode("location")
+            alert("Unable to retrieve your location!")
         })
     }
 
+    useEffect(handleSubmit, [geoLocation, locationMode])
+
     useEffect(() => {
+        setPage(1)
         setSpinner(true)
         if (path !== location.search)
             setPath(location.search)
-        if (location.search === "" && geoLocation === null)
-            return
         let url = "/cors-proxy/https://jobs.github.com/positions.json" + location.search
+        setJobPostings([])
         axios.get(url)
             .then(
-                response => {
-                    setJobPostings(response.data);
-                    setSpinner(false)
-                    setFetchError("")
-                    setShouldLoadNextPage(true)
-                }
+                success
             )
-            .catch(e => {
+            .catch(
+                fail
+            )
+            .finally(() => {
                 setSpinner(false)
-                setFetchError(e.message)
-                setShouldLoadNextPage(false)
             })
     }, [path])
 
     const classes = useStyles();
 
+    let GeoLocationButton = (
+        <Button active={locationMode === "location"} size="small" color="primary" variant="outlined" onClick={handleGeoLocationSubmit}>
+            <RoomIcon />
+        </Button>
+    )
+    let textColor = themeType === "light" ? "black" : "white"
+    let errorMessageStyle = { textAlign: "center", marginTop: "2em", color: textColor }
 
     let JobCards = (
         <InfiniteScroll
             dataLength={jobPostings.length} //This is important field to render the next data
             next={addToData}
             hasMore={shouldLoadNextPage}
-            loader={<p style={{ textAlign: "center", marginTop: "2em" }}>
+            loader={<p style={errorMessageStyle}>
                 {!spinner &&
                     <CircularProgress />
                 }
@@ -228,12 +275,12 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                 )}
             </Grid>
             {fetchError !== "" &&
-                <Typography style={{ textAlign: "center", marginTop: "2em" }}>
+                <Typography style={errorMessageStyle}>
                     <b>{fetchError}</b>
                 </Typography>
             }
             {fetchError === "" && !spinner && jobPostings.length === 0 &&
-                <Typography style={{ textAlign: "center", marginTop: "2em" }}>
+                <Typography style={errorMessageStyle}>
                     <b>No Results Found!</b>
                 </Typography>
             }
@@ -264,19 +311,26 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                 <Divider orientation="vertical" flexItem />
                 <Grid item xs={12} sm={12} md={4} lg={4}>
                     <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <RoomIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Filter by Location..."
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={(e) => { setLocationQuery(e.target.value) }}
-                            value={locationQuery}
-                        />
+
+                        <Grid container direction="row" justify="flex-start" alignItems="center">
+                            <Grid item sm={3}>
+                                {GeoLocationButton}
+                            </Grid>
+                            <Grid item sm={9}>
+                                <InputBase
+                                    placeholder="Filter by Location..."
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: `${classes.inputInput} ${classes.inputLocation}`,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                    onChange={handleLocationInput}
+                                    value={locationQuery}
+                                />
+                            </Grid>
+
+                        </Grid>
+
                     </div>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
@@ -289,7 +343,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                                     <ThemedCheckbox
                                         className={classes.checkbox}
                                         checked={fullTimeFilter}
-                                        onChange={(e) => { setFullTimeFilter(e.target.checked) }}
+                                        onChange={handleCheckBoxInput}
 
                                         color="primary"
                                         name="checkedA" />
@@ -341,7 +395,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                     </Grid>
                 </Grid>
                 {showMobileFilters &&
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                         <InputBase
                             placeholder="Filter by Location..."
                             classes={{
@@ -349,20 +403,26 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                                 input: classes.inputInput,
                             }}
                             inputProps={{ 'aria-label': 'search' }}
-                            onChange={(e) => { setLocationQuery(e.target.value) }}
+                            onChange={handleLocationInput}
                             value={locationQuery}
                         />
                     </Grid>
                 }
                 {showMobileFilters &&
-                    <Grid item xs={6}>
+                    <Grid item sm={4}>
+                        {GeoLocationButton}
+                    </Grid>
+
+                }
+                {showMobileFilters &&
+                    <Grid item xs={4}>
                         <FormControlLabel
                             classes={{ root: classes.checkboxForm, label: classes.checkboxLabel }}
                             control={
                                 <ThemedCheckbox
                                     className={classes.checkbox}
                                     checked={fullTimeFilter}
-                                    onChange={(e) => { setFullTimeFilter(e.target.checked) }}
+                                    onChange={handleCheckBoxInput}
 
                                     color="primary"
                                     name="checkedA" />
