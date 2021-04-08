@@ -118,7 +118,6 @@ export default function JobDetails({ themeType }) {
     let applyLink = pattern.exec(jobData.how_to_apply)
 
     useEffect(() => {
-        console.log(location)
         if (path !== location.pathname)
             setPath(location.pathname)
         let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/" + location.pathname + ".json"
@@ -130,7 +129,6 @@ export default function JobDetails({ themeType }) {
             .then(
                 jobData => {
                     setJobDetails(jobData);
-                    console.log(jobData)
                 }
             )
             .catch(e => console.log(e))

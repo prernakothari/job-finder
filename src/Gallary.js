@@ -147,7 +147,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
         if (path !== location.search)
             setPath(location.search)
 
-        let url = `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=${page + 1}` + location.search.substr(1, location.search.length)
+        let url = `https://jobs.github.com/positions.json?page=${page + 1}` + location.search.substr(1, location.search.length)
         setPage(page + 1)
         axios.get(url)
             .then(
@@ -185,7 +185,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
             setPath(location.search)
         if (location.search === "" && geoLocation === null)
             return
-        let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
+        let url = "https://jobs.github.com/positions.json" + location.search
         axios.get(url)
             .then(
                 response => {
