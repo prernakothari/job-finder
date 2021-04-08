@@ -67,7 +67,7 @@ export default function TopBar({ themeType, handleThemeChange }) {
             <AppBar position="static" className={classes.root}>
                 <Toolbar className={classes.toolbar}>
                     <Typography variant="h6" className={classes.title}>
-                        <Link to={"/"} className={classes.homeNav} >Dev Jobs</Link>
+                        <Link to={"/"} className={classes.homeNav} >devjobs</Link>
                     </Typography>
                     <Typography component="div">
                         <Grid component="label" container alignItems="center" spacing={1}>

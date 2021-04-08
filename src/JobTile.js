@@ -64,7 +64,7 @@ export default function JobTile({ themeType, title, type, created_at, company_lo
     }
 
     return (
-        <div>
+        <div className={classes.main}>
             <Avatar variant="rounded" src={company_logo} sx={{ ".MuiAvatar-img": "contain" }} className={classes.logo} />
             <Card className={classes.root} onClick={handleClick}>
                 <CardContent >
