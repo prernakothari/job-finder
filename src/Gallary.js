@@ -100,6 +100,9 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
             [theme.breakpoints.up('sm')]: {
                 paddingLeft: theme.spacing(1),
             },
+            [theme.breakpoints.up('md')]: {
+                paddingLeft: 0,
+            },
         },
         checkboxForm: {
             padding: theme.spacing(0, 0, 0, 2),
@@ -248,7 +251,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
     const classes = useStyles();
 
     let GeoLocationButton = (
-        <Button active={locationMode === "location"} size="small" color="primary" variant="outlined" onClick={handleGeoLocationSubmit}>
+        <Button active={locationMode === "location"} size="small" color="primary" onClick={handleGeoLocationSubmit}>
             <RoomIcon />
         </Button>
     )
@@ -289,8 +292,8 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
 
     let DeskTopSearchBar = (
         <Card position="static" className={`${classes.desktopSearchBar} ${classes.searchBar}`}>
-            <Grid container direction="row" justify="space-between" alignItems="center">
-                <Grid item xs={12} sm={12} md={4} lg={4}>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+                <Grid item xs={12} sm={12} md={4} lg={4} >
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />
@@ -313,10 +316,10 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                     <div className={classes.search}>
 
                         <Grid container direction="row" justify="flex-start" alignItems="center">
-                            <Grid item sm={3}>
+                            <Grid item sm={1} md={2}>
                                 {GeoLocationButton}
                             </Grid>
-                            <Grid item sm={9}>
+                            <Grid item sm={9} md={8}>
                                 <InputBase
                                     placeholder="Filter by Location..."
                                     classes={{
@@ -334,8 +337,8 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
                     </div>
                 </Grid>
                 <Divider orientation="vertical" flexItem />
-                <Grid item>
-                    <Grid container direction="row" justify="flex-end" alignItems="center">
+                <Grid item xs={12} sm={12} md={4} lg={4} style={{ maxWidth: "32%" }}>
+                    <Grid container direction="row" justify="space-between" alignItems="center">
                         <Grid item>
                             <FormControlLabel
                                 className={classes.checkboxForm}
