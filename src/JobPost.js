@@ -15,11 +15,12 @@ import { TimeAgo } from "./Utils"
 import { PurpleButton, LightPurpleButton, DarkPurpleButton } from "./Button"
 import { useLocation } from "react-router-dom"
 import { colors } from "./constants"
+import axios from "axios"
     // is location is a number (US zip code), we could use zip static for obtaining City, State in US
 
     ;
 
-export default function JobDetails({ themeType }) {
+export default function JobDetails({ themeType, setSpinner }) {
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -109,30 +110,35 @@ export default function JobDetails({ themeType }) {
     }))
     let CompanySiteButton = themeType === "light" ? LightPurpleButton : DarkPurpleButton
     let [path, setPath] = useState("")
-    let [jobData, setJobDetails] = useState(testData()[0])
-    let timeAgo = TimeAgo(jobData.created_at)
-    const classes = useStyles();
-    const bull = <span className={classes.bullet}>•</span>;
+    let [jobData, setJobDetails] = useState(null)
     const location = useLocation();
-    let pattern = new RegExp(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig)
-    let applyLink = pattern.exec(jobData.how_to_apply)
+    const classes = useStyles();
 
     useEffect(() => {
         if (path !== location.pathname)
             setPath(location.pathname)
-        let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/" + location.pathname + ".json"
-        fetch(url)
+        let url = "/cors-proxy/https://jobs.github.com/" + location.pathname + ".json"
+        axios.get(url)
             .then(
                 response => {
-                    return response.json()
-                })
-            .then(
-                jobData => {
-                    setJobDetails(jobData);
+                    setJobDetails(response.data);
                 }
             )
             .catch(e => console.log(e))
     }, [path])
+
+    if (jobData === null) {
+        setSpinner(true)
+        return <div></div>
+    } else {
+        setSpinner(false)
+    }
+
+    let timeAgo = TimeAgo(jobData.created_at)
+    const bull = <span className={classes.bullet}>•</span>;
+    let pattern = new RegExp(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig)
+    let applyLink = pattern.exec(jobData.how_to_apply)
+
 
     var DeskTopJobHeader = (
         <Card className={`${classes.desktopVersion} ${classes.JobDetailsHeading}`}>

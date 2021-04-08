@@ -24,7 +24,7 @@ export default function App() {
       }
       <Switch>
         <Route path="/positions">
-          <JobDetails themeType={themeType} />
+          <JobDetails themeType={themeType} setSpinner={setSpinner} />
         </Route>
         <Route path="/">
           <Gallary themeType={themeType} setSpinner={setSpinner} spinner={spinner} />
