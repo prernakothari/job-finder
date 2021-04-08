@@ -18,7 +18,6 @@ import RoomIcon from '@material-ui/icons/Room';
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { colors } from "./constants";
-import { MicNone } from "@material-ui/icons";
 import SortIcon from '@material-ui/icons/Sort';
 import { DarkPurpleButton } from "./Button";
 import axios from "axios";
@@ -153,13 +152,9 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
         axios.get(url)
             .then(
                 response => {
-                    return response.json()
-                })
-            .then(
-                data => {
-                    setJobPostings([...jobPostings, ...data])
+                    setJobPostings([...jobPostings, ...response.data])
                     setFetchError("")
-                    if (data.length > 0)
+                    if (response.data.length > 0)
                         setShouldLoadNextPage(true)
                     else
                         setShouldLoadNextPage(false)
@@ -194,12 +189,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
         axios.get(url)
             .then(
                 response => {
-                    console.log(response)
-                    return response.json()
-                })
-            .then(
-                data => {
-                    setJobPostings(data);
+                    setJobPostings(response.data);
                     setSpinner(false)
                     setFetchError("")
                     setShouldLoadNextPage(true)
