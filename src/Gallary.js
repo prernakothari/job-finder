@@ -22,6 +22,9 @@ import SortIcon from '@material-ui/icons/Sort';
 import { DarkPurpleButton } from "./Button";
 import axios from "axios";
 
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+
 export default function Gallery({ themeType, setSpinner, spinner }) {
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -147,7 +150,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
         if (path !== location.search)
             setPath(location.search)
 
-        let url = `https://jobs.github.com/positions.json?page=${page + 1}` + location.search.substr(1, location.search.length)
+        let url = `positions.json?page=${page + 1}` + location.search.substr(1, location.search.length)
         setPage(page + 1)
         axios.get(url)
             .then(
@@ -185,7 +188,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
             setPath(location.search)
         if (location.search === "" && geoLocation === null)
             return
-        let url = "https://jobs.github.com/positions.json" + location.search
+        let url = "/positions.json" + location.search
         axios.get(url)
             .then(
                 response => {
