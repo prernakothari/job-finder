@@ -8,11 +8,12 @@ import Container from '@material-ui/core/Container';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import { purple } from "@material-ui/core/colors";
+import { colors } from "./constants";
 
 export const PurpleButton = withStyles((theme) => ({
     root: {
-        color: "#FFFFFF",
-        backgroundColor: "#5865E0",
+        color: colors.mainLight,
+        backgroundColor: colors.purple,
         '&:hover': {
             backgroundColor: purple[500]
         },
@@ -22,7 +23,17 @@ export const PurpleButton = withStyles((theme) => ({
 export const LightPurpleButton = withStyles((theme) => ({
     root: {
         color: "black",
-        backgroundColor: "#CECFF6",
+        backgroundColor: colors.lightPurple,
+        '&:hover': {
+            backgroundColor: purple[500]
+        },
+    }
+}))(Button)
+
+export const DarkPurpleButton = withStyles((theme) => ({
+    root: {
+        color: "black",
+        backgroundColor: colors.darkPurple,
         '&:hover': {
             backgroundColor: purple[500]
         },

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
-import { fade, makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import JobTile from "./JobTile";
@@ -22,89 +21,92 @@ import SearchIcon from '@material-ui/icons/Search';
 import RoomIcon from '@material-ui/icons/Room';
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { colors } from "./constants";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: "#F5F6F8"
-    },
-    grow: {
-        flexGrow: 1
-    },
-    paper: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-    searchBar: {
-        backgroundColor: "#FFFFFF",
-        marginBottom: theme.spacing(7),
-        position: 'relative',
-        top: -theme.spacing(3.5),
-    },
-    search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+export default function Gallery({ themeType }) {
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            flexGrow: 1,
+            backgroundColor: themeType === "light" ? colors.bgLight : colors.bgDark
         },
-        marginLeft: 0,
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(3),
-            width: 'auto',
+        grow: {
+            flexGrow: 1
         },
-    },
-    searchIcon: {
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: "gray"
-    },
-    inputRoot: {
-        color: 'black',
-    },
-    inputInput: {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
+        menuButton: {
+            marginRight: theme.spacing(2),
         },
-    },
-    checkbox: {
+        title: {
+            flexGrow: 1,
+        },
+        searchBar: {
+            color: themeType === "light" ? "black" : "white",
+            backgroundColor: themeType === "light" ? colors.mainLight : colors.mainDark,
+            marginBottom: theme.spacing(7),
+            position: 'relative',
+            top: -theme.spacing(3.5),
+        },
+        search: {
+            backgroundColor: themeType === "light" ? colors.bgLight : colors.bgDark,
+            position: 'relative',
+            borderRadius: theme.shape.borderRadius,
+            backgroundColor: fade(theme.palette.common.white, 0.15),
+            '&:hover': {
+                backgroundColor: fade(theme.palette.common.white, 0.25),
+            },
+            marginLeft: 0,
+            [theme.breakpoints.up('sm')]: {
+                marginLeft: theme.spacing(3),
+                width: 'auto',
+            },
+        },
+        searchIcon: {
+            padding: theme.spacing(0, 2),
+            height: '100%',
+            position: 'absolute',
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: colors.purple
+        },
+        inputRoot: {
+            color: themeType === "light" ? "black" : "white",
+        },
+        inputInput: {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('md')]: {
+                width: '20ch',
+            },
+        },
+        checkboxForm: {
+            padding: theme.spacing(0, 0, 0, 2),
+        },
+        searchButton: {
+            marginRight: theme.spacing(1)
+        }
+    }));
 
-    },
-    checkboxForm: {
-        padding: theme.spacing(0, 0, 0, 2),
-        color: "black",
-        fontWeight: "bold"
-    },
-    searchButton: {
-        marginRight: theme.spacing(1)
-    }
-}));
+    const ThemedCheckbox = withStyles({
+        root: {
+            color: themeType === "light" ? "black" : "white",
+            '&$checked': {
+                color: colors.purple,
+            },
+        },
+        checked: {},
+    })((props) => <Checkbox color="default" {...props} />);
 
-export default function Gallery() {
     let [path, setPath] = useState("")
     let [shouldLoadNextPage, setShouldLoadNextPage] = useState(true)
     let [page, setPage] = useState(1)
     let [fullTimeFilter, setFullTimeFilter] = useState(false)
     let [description, setDescription] = useState("")
     let [locationQuery, setLocationQuery] = useState("")
-    let [jobPostings, setJobPostings] = useState([])//testData())
+    let [jobPostings, setJobPostings] = useState(testData()) //useState([])// testData())
     let location = useLocation();
     let history = useHistory();
     console.log(jobPostings.length)
@@ -147,23 +149,23 @@ export default function Gallery() {
             .catch(e => console.log(e))
     }
 
-    useEffect(() => {
-        if (path !== location.search)
-            setPath(location.search)
-        let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
-        fetch(url)
-            .then(
-                response => {
-                    return response.json()
-                })
-            .then(
-                data => {
-                    setJobPostings(data);
-                    console.log(data)
-                }
-            )
-            .catch(e => console.log(e))
-    }, [path])
+    // useEffect(() => {
+    //     if (path !== location.search)
+    //         setPath(location.search)
+    //     let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
+    //     fetch(url)
+    //         .then(
+    //             response => {
+    //                 return response.json()
+    //             })
+    //         .then(
+    //             data => {
+    //                 setJobPostings(data);
+    //                 console.log(data)
+    //             }
+    //         )
+    //         .catch(e => console.log(e))
+    // }, [path])
 
     const classes = useStyles();
 
@@ -185,7 +187,7 @@ export default function Gallery() {
             <Grid container spacing={3}>
                 {jobPostings.map(item =>
                     <Grid item xs={12} sm={6} lg={4}>
-                        <JobTile {...item} />
+                        <JobTile themeType={themeType} {...item} />
                     </Grid>
                 )}
             </Grid>
@@ -239,7 +241,7 @@ export default function Gallery() {
                                         <FormControlLabel
                                             className={classes.checkboxForm}
                                             control={
-                                                <Checkbox
+                                                <ThemedCheckbox
                                                     className={classes.checkbox}
                                                     checked={fullTimeFilter}
                                                     onChange={(e) => { setFullTimeFilter(e.target.checked) }}
@@ -258,10 +260,7 @@ export default function Gallery() {
                         </Grid>
                     </Card>
                 </Container>
-                {/* {JobCards} */}
-                <Typography style={{ textAlign: "center", marginTop: "2em" }}>
-                    <b>You have seen them all!</b>
-                </Typography>
+                {JobCards}
             </div>
         </div>
     );

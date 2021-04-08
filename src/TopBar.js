@@ -12,70 +12,53 @@ import { purple } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import Brightness3Icon from '@material-ui/icons/Brightness3';
+import { colors } from "./constants";
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        height: theme.spacing(14),
-        backgroundColor: "#F5F6F8"
-    },
-    homeNav: {
-        color: "#FFFFFF",
-        "text-decoration": "none"
-    },
-    toolbar: {
-        height: theme.spacing(14),
-        backgroundColor: "#5865E0",
-        "border-bottom-left-radius": "55px"
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
 
-const AntSwitch = withStyles((theme) => ({
-    root: {
-        width: 28,
-        height: 16,
-        padding: 0,
-        display: 'flex',
-    },
-    switchBase: {
-        padding: 2,
-        color: theme.palette.grey[500],
-        '&$checked': {
-            transform: 'translateX(12px)',
-            color: theme.palette.common.white,
-            '& + $track': {
-                opacity: 1,
-                backgroundColor: theme.palette.primary.main,
-                borderColor: theme.palette.primary.main,
+export default function TopBar({ themeType, handleThemeChange }) {
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            flexGrow: 1,
+            height: theme.spacing(14),
+            backgroundColor: themeType === "light" ? colors.bgLight : colors.bgDark
+        },
+        homeNav: {
+            color: "#FFFFFF",
+            "text-decoration": "none"
+        },
+        toolbar: {
+            height: theme.spacing(14),
+            backgroundColor: colors.purple,
+            "border-bottom-left-radius": "55px"
+        },
+        title: {
+            flexGrow: 1,
+        },
+    }));
+
+    const ThemeSwitch = withStyles({
+        switchBase: {
+            color: "gray",
+            '&$checked': {
+                color: "white",
+            },
+            '&$checked + $track': {
+                backgroundColor: colors.darkPurple,
             },
         },
-    },
-    thumb: {
-        width: 12,
-        height: 12,
-        boxShadow: 'none',
-    },
-    track: {
-        border: `1px solid ${theme.palette.grey[500]}`,
-        borderRadius: 16 / 2,
-        opacity: 1,
-        backgroundColor: theme.palette.common.white,
-    },
-    checked: {},
-}))(Switch);
+        checked: {},
+        track: {},
+    })(Switch);
 
-
-export default function TopBar() {
     const classes = useStyles();
-    const [state, setState] = React.useState({
-        checkedA: true,
-        checkedB: true,
-    });
+    const [state, setState] = React.useState({ checkedA: false });
 
     const handleChange = (event) => {
+        if (event.target.checked)
+            handleThemeChange("dark")
+        else
+            handleThemeChange("light")
+
         setState({ ...state, [event.target.name]: event.target.checked });
     };
 
@@ -89,13 +72,13 @@ export default function TopBar() {
                     <Typography component="div">
                         <Grid component="label" container alignItems="center" spacing={1}>
                             <Grid item>
-                                <WbSunnyIcon />
+                                <WbSunnyIcon fontSize="small" />
                             </Grid>
                             <Grid item>
-                                <Switch size="small" checked={state.checkedA} onChange={handleChange} name="checkedA" />
+                                <ThemeSwitch size="small" checked={state.checkedA} onChange={handleChange} name="checkedA" />
                             </Grid>
                             <Grid item>
-                                <Brightness3Icon />
+                                <Brightness3Icon fontSize="small" />
                             </Grid>
                         </Grid>
                     </Typography>

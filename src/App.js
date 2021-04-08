@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Switch,
   Route,
@@ -7,18 +7,20 @@ import {
 import JobDetails from "./JobPost";
 import Gallary from "./Gallary"
 import TopBar from "./TopBar";
+import { colors } from "./constants";
 
 
 export default function App() {
+  let [themeType, setTheme] = useState("light")
   return (
-    <div>
-      <TopBar />
+    <div style={{ "backgroundColor": themeType === "light" ? colors.bgLight : colors.bgDark }}>
+      <TopBar themeType={themeType} handleThemeChange={setTheme} />
       <Switch>
         <Route path="/positions">
-          <JobDetails />
+          <JobDetails themeType={themeType} />
         </Route>
         <Route path="/">
-          <Gallary />
+          <Gallary themeType={themeType} />
         </Route>
       </Switch>
     </div >
