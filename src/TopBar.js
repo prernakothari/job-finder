@@ -20,7 +20,8 @@ export default function TopBar({ themeType, handleThemeChange }) {
         root: {
             flexGrow: 1,
             height: theme.spacing(14),
-            backgroundColor: themeType === "light" ? colors.bgLight : colors.bgDark
+            backgroundColor: themeType === "light" ? colors.bgLight : colors.bgDark,
+            "box-shadow": "none",
         },
         homeNav: {
             color: "#FFFFFF",
@@ -29,7 +30,10 @@ export default function TopBar({ themeType, handleThemeChange }) {
         toolbar: {
             height: theme.spacing(14),
             backgroundColor: colors.purple,
-            "border-bottom-left-radius": "55px"
+            "border-bottom-left-radius": "55px",
+            [theme.breakpoints.down('xs')]: {
+                "border-bottom-left-radius": "0px"
+            }
         },
         title: {
             flexGrow: 1,

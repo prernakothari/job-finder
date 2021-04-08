@@ -51,9 +51,13 @@ export default function JobDetails({ themeType }) {
             backgroundColor: colors.mainLight,
             height: theme.spacing(10),
             width: theme.spacing(10),
+            zIndex: 10,
             [theme.breakpoints.down('xs')]: {
                 height: theme.spacing(7),
                 width: theme.spacing(7),
+                position: "relative",
+                top: - theme.spacing(3.5),
+                boxShadow: `0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%); `,
             },
         },
         applyNowButton: {
@@ -75,7 +79,12 @@ export default function JobDetails({ themeType }) {
         },
         JobDetailsHeading: {
             backgroundColor: themeType === "light" ? colors.mainLight : colors.mainDark,
-            color: themeType === "light" ? "black" : "white"
+            color: themeType === "light" ? "black" : "white",
+            [theme.breakpoints.down('xs')]: {
+                paddingTop: theme.spacing(5),
+                position: "relative",
+                top: - theme.spacing(7)
+            },
         },
         companyHeading: {
             paddingLeft: theme.spacing(3)
@@ -159,26 +168,34 @@ export default function JobDetails({ themeType }) {
     )
 
     var MobileJobHeader = (
-        <Card className={`${classes.mobileVersion} ${classes.JobDetailsHeading}`}>
-            <Grid container direction="column" alignItems="center">
-                <Grid item >
-                    <Avatar variant="rounded" src={jobData.company_logo} className={classes.logo} />
-                </Grid>
-                <Grid item>
-                    <Typography variant="h6" component="h6">
-                        {jobData.company}
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <Typography>
-                        {jobData.company_url}
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
+        <Grid container direction="column" alignItems="stretch" justify="center" className={classes.mobileVersion}>
+            <Grid item xs={12} >
+                <Grid container direction="row" justify="center" alignItems="center">
+                    <Grid item xs={0}>
+                        <Avatar variant="rounded" src={jobData.company_logo} className={classes.logo} />
+                    </Grid>
                 </Grid>
             </Grid>
-        </Card >
+            <Grid item xs={12} >
+                <Card className={classes.JobDetailsHeading}>
+                    <Grid container direction="column" alignItems="center">
+                        <Grid item>
+                            <Typography variant="h6" component="h6">
+                                {jobData.company}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography>
+                                {jobData.company_url}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
+                        </Grid>
+                    </Grid>
+                </Card >
+            </Grid>
+        </Grid>
     )
 
     return (

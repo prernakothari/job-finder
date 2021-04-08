@@ -13,6 +13,7 @@ import { colors } from "./constants";
 export const PurpleButton = withStyles((theme) => ({
     root: {
         color: colors.mainLight,
+        "text-transform": "capitalize",
         backgroundColor: colors.purple,
         '&:hover': {
             backgroundColor: purple[500]
@@ -23,6 +24,7 @@ export const PurpleButton = withStyles((theme) => ({
 export const LightPurpleButton = withStyles((theme) => ({
     root: {
         color: "black",
+        "text-transform": "capitalize",
         backgroundColor: colors.lightPurple,
         '&:hover': {
             backgroundColor: purple[500]
@@ -32,7 +34,8 @@ export const LightPurpleButton = withStyles((theme) => ({
 
 export const DarkPurpleButton = withStyles((theme) => ({
     root: {
-        color: "black",
+        color: colors.mainLight,
+        "text-transform": "capitalize",
         backgroundColor: colors.darkPurple,
         '&:hover': {
             backgroundColor: purple[500]

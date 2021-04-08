@@ -20,6 +20,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { colors } from "./constants";
 import { MicNone } from "@material-ui/icons";
 import SortIcon from '@material-ui/icons/Sort';
+import { DarkPurpleButton } from "./Button";
 
 export default function Gallery({ themeType }) {
     const useStyles = makeStyles((theme) => ({
@@ -120,7 +121,7 @@ export default function Gallery({ themeType }) {
     let [showMobileFilters, setShowMobileFilters] = useState(false)
     let [description, setDescription] = useState("")
     let [locationQuery, setLocationQuery] = useState("")
-    let [jobPostings, setJobPostings] = useState(testData()) //useState([])// testData())
+    let [jobPostings, setJobPostings] = /* useState(testData()) */ useState([])
     let location = useLocation();
     let history = useHistory();
 
@@ -172,23 +173,23 @@ export default function Gallery({ themeType }) {
         }, () => { console.log("Unable to retrieve your location!") });
     }
 
-    // useEffect(() => {
-    //     if (path !== location.search)
-    //         setPath(location.search)
-    //     let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
-    //     fetch(url)
-    //         .then(
-    //             response => {
-    //                 return response.json()
-    //             })
-    //         .then(
-    //             data => {
-    //                 setJobPostings(data);
-    //                 console.log(data)
-    //             }
-    //         )
-    //         .catch(e => console.log(e))
-    // }, [path])
+    useEffect(() => {
+        if (path !== location.search)
+            setPath(location.search)
+        let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
+        fetch(url)
+            .then(
+                response => {
+                    return response.json()
+                })
+            .then(
+                data => {
+                    setJobPostings(data);
+                    console.log(data)
+                }
+            )
+            .catch(e => console.log(e))
+    }, [path])
 
     const classes = useStyles();
 
@@ -276,9 +277,9 @@ export default function Gallery({ themeType }) {
                             />
                         </Grid>
                         <Grid item className={classes.searchButton}>
-                            <Button variant="contained" color="primary" onClick={handleSubmit}
+                            <DarkPurpleButton variant="contained" color="primary" onClick={handleSubmit}
 
-                            >Search</Button>
+                            >Search</DarkPurpleButton>
                         </Grid>
                     </Grid>
                 </Grid>
