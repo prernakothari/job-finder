@@ -21,8 +21,9 @@ import { colors } from "./constants";
 import { MicNone } from "@material-ui/icons";
 import SortIcon from '@material-ui/icons/Sort';
 import { DarkPurpleButton } from "./Button";
+import axios from "axios";
 
-export default function Gallery({ themeType }) {
+export default function Gallery({ themeType, setSpinner, spinner }) {
     const useStyles = makeStyles((theme) => ({
         root: {
             flexGrow: 1,
@@ -117,10 +118,12 @@ export default function Gallery({ themeType }) {
     let [path, setPath] = useState("")
     let [shouldLoadNextPage, setShouldLoadNextPage] = useState(true)
     let [page, setPage] = useState(1)
+    let [fetchError, setFetchError] = useState("")
     let [fullTimeFilter, setFullTimeFilter] = useState(false)
     let [showMobileFilters, setShowMobileFilters] = useState(false)
     let [description, setDescription] = useState("")
     let [locationQuery, setLocationQuery] = useState("")
+    let [geoLocation, setGeoLocation] = useState(undefined)
     let [jobPostings, setJobPostings] = /* useState(testData()) */ useState([])
     let location = useLocation();
     let history = useHistory();
@@ -144,9 +147,10 @@ export default function Gallery({ themeType }) {
     const addToData = () => {
         if (path !== location.search)
             setPath(location.search)
+
         let url = `https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?page=${page + 1}` + location.search.substr(1, location.search.length)
         setPage(page + 1)
-        fetch(url)
+        axios.get(url)
             .then(
                 response => {
                     return response.json()
@@ -154,14 +158,17 @@ export default function Gallery({ themeType }) {
             .then(
                 data => {
                     setJobPostings([...jobPostings, ...data])
-                    console.log(data.length)
+                    setFetchError("")
                     if (data.length > 0)
                         setShouldLoadNextPage(true)
                     else
                         setShouldLoadNextPage(false)
                 }
             )
-            .catch(e => console.log(e))
+            .catch((e) => {
+                setFetchError(e.message)
+                setShouldLoadNextPage(false)
+            })
     }
 
     if (path === "" && location.search === "") {
@@ -170,25 +177,39 @@ export default function Gallery({ themeType }) {
             history.push(query)
             setPath(query)
             setPage(0)
-        }, () => { console.log("Unable to retrieve your location!") });
+            setGeoLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude })
+        }, () => {
+            setGeoLocation(null)
+            console.log("Unable to retrieve your location!")
+        })
     }
 
     useEffect(() => {
+        setSpinner(true)
         if (path !== location.search)
             setPath(location.search)
+        if (location.search === "" && geoLocation === null)
+            return
         let url = "https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json" + location.search
-        fetch(url)
+        axios.get(url)
             .then(
                 response => {
+                    console.log(response)
                     return response.json()
                 })
             .then(
                 data => {
                     setJobPostings(data);
-                    console.log(data)
+                    setSpinner(false)
+                    setFetchError("")
+                    setShouldLoadNextPage(true)
                 }
             )
-            .catch(e => console.log(e))
+            .catch(e => {
+                setSpinner(false)
+                setFetchError(e.message)
+                setShouldLoadNextPage(false)
+            })
     }, [path])
 
     const classes = useStyles();
@@ -200,13 +221,11 @@ export default function Gallery({ themeType }) {
             next={addToData}
             hasMore={shouldLoadNextPage}
             loader={<p style={{ textAlign: "center", marginTop: "2em" }}>
-                <CircularProgress />
+                {!spinner &&
+                    <CircularProgress />
+                }
             </p>}
-            endMessage={
-                <Typography style={{ textAlign: "center", marginTop: "2em" }}>
-                    <b>You have seen them all!</b>
-                </Typography>
-            }
+            endMessage={<div />}
         >
             <Grid container spacing={2} >
                 {jobPostings.map(item =>
@@ -215,6 +234,16 @@ export default function Gallery({ themeType }) {
                     </Grid>
                 )}
             </Grid>
+            {fetchError !== "" &&
+                <Typography style={{ textAlign: "center", marginTop: "2em" }}>
+                    <b>{fetchError}</b>
+                </Typography>
+            }
+            {fetchError === "" && !spinner && jobPostings.length === 0 &&
+                <Typography style={{ textAlign: "center", marginTop: "2em" }}>
+                    <b>No Results Found!</b>
+                </Typography>
+            }
         </InfiniteScroll>
     )
 
@@ -270,7 +299,6 @@ export default function Gallery({ themeType }) {
                                         onChange={(e) => { setFullTimeFilter(e.target.checked) }}
 
                                         color="primary"
-                                        inputProps={{ 'aria-label': 'secondary checkbox', "font-weight": "bold" }}
                                         name="checkedA" />
                                 }
                                 label="Full Time Only"
@@ -344,7 +372,6 @@ export default function Gallery({ themeType }) {
                                     onChange={(e) => { setFullTimeFilter(e.target.checked) }}
 
                                     color="primary"
-                                    inputProps={{ 'aria-label': 'secondary checkbox', "font-weight": "bold" }}
                                     name="checkedA" />
                             }
                             label="Full Time Only"

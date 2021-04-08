@@ -16,7 +16,6 @@ export default function JobTile({ themeType, title, type, created_at, company_lo
         root: {
             textAlign: "left",
             minWidth: 275,
-            height: 225,
             position: "relative",
             top: - theme.spacing(3.5),
             '&:hover': {
@@ -24,6 +23,9 @@ export default function JobTile({ themeType, title, type, created_at, company_lo
             },
             backgroundColor: themeType === "light" ? colors.mainLight : colors.mainDark,
             color: themeType === "light" ? "black" : "white",
+            [theme.breakpoints.up('sm')]: {
+                height: 225,
+            },
         },
         bullet: {
             display: 'inline-block',
@@ -37,6 +39,9 @@ export default function JobTile({ themeType, title, type, created_at, company_lo
         },
         pos: {
             color: themeType === "light" ? "black" : "white",
+            [theme.breakpoints.down('xs')]: {
+                marginBottom: theme.spacing(3),
+            },
         },
         location: {
             color: colors.purple,
