@@ -1,6 +1,5 @@
 {
   "name": "job-finder",
-  "homepage": "https://prernakothari.github.io/job-finder",
   "proxy": "https://jobs.github.com",
   "version": "0.1.0",
   "private": true,
