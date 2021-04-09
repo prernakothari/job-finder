@@ -1,4 +1,4 @@
-export function TimeAgo(created_at) {
+export function TimeAgo(created_at, currentTime = undefined) {
     created_at = created_at.split(" ")
     let month = {
         "Jan": 0,
@@ -20,9 +20,11 @@ export function TimeAgo(created_at) {
     let months = days * 30;
     let years = days * 365;
     let createdDayTime = created_at[3].split(":").map(it => Number(it))
+    if (currentTime === undefined)
+        currentTime = new Date().getTime()
 
     let createdDate = Date.UTC(Number(created_at[5]), month[created_at[1]], Number(created_at[2]), createdDayTime[0], createdDayTime[1], createdDayTime[2]);
-    let deltaT = new Date().getTime() - createdDate
+    let deltaT = currentTime - createdDate
 
     if (deltaT < 1000 * 60)
         return "Just now"
