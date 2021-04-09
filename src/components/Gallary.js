@@ -134,7 +134,7 @@ export default function Gallery({ themeType, setSpinner, spinner }) {
     let [locationQuery, setLocationQuery] = useState("")
     let [locationMode, setLocationMode] = useState("location") // location or geoLocation
     let [geoLocation, setGeoLocation] = useState(undefined)
-    let [jobPostings, setJobPostings] = /* useState(testData()) */ useState([])
+    let [jobPostings, setJobPostings] = useState([])
     let location = useLocation();
     let history = useHistory();
 
