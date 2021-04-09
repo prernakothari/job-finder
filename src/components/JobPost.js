@@ -133,7 +133,11 @@ export default function JobDetails({ themeType, setSpinner }) {
     let timeAgo = TimeAgo(jobData.created_at)
     const bull = <span className={classes.bullet}>•</span>;
     let pattern = new RegExp(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig)
-    let applyLink = pattern.exec(jobData.how_to_apply)
+    let applyLinks = pattern.exec(jobData.how_to_apply)
+    let applyLink;
+    if (applyLinks !== null) {
+        applyLink = applyLinks[0]
+    }
 
 
     var DeskTopJobHeader = (
@@ -160,9 +164,11 @@ export default function JobDetails({ themeType, setSpinner }) {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item>
-                    <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
-                </Grid>
+                {jobData.company_url &&
+                    <Grid item>
+                        <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} disabled={!jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
+                    </Grid>
+                }
             </Grid>
         </Card>
     )
@@ -189,9 +195,11 @@ export default function JobDetails({ themeType, setSpinner }) {
                                 {jobData.company_url}
                             </Typography>
                         </Grid>
-                        <Grid item>
-                            <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
-                        </Grid>
+                        {jobData.company_url &&
+                            <Grid item>
+                                <CompanySiteButton className={classes.companySiteButton} href={jobData.company_url} aria-label="Company Site">Company Site</CompanySiteButton>
+                            </Grid>
+                        }
                     </Grid>
                 </Card >
             </Grid>
@@ -221,11 +229,13 @@ export default function JobDetails({ themeType, setSpinner }) {
                                         {jobData.location}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} sm="auto" lg="auto">
-                                    <PurpleButton className={classes.applyNowButton} href={applyLink}>
-                                        Apply Now
+                                {applyLinks !== null &&
+                                    <Grid item xs={12} sm="auto" lg="auto">
+                                        <PurpleButton className={classes.applyNowButton} href={applyLink} disabled={applyLinks === null}>
+                                            Apply Now
                                     </PurpleButton>
-                                </Grid>
+                                    </Grid>
+                                }
                             </Grid>
                             <Typography >
                                 <div dangerouslySetInnerHTML={{ __html: jobData.description }} />
