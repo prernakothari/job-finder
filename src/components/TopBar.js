@@ -4,15 +4,11 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { purple } from '@material-ui/core/colors';
 import Grid from '@material-ui/core/Grid';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import Brightness3Icon from '@material-ui/icons/Brightness3';
-import { colors } from "./constants";
+import { colors } from "../helpers/constants";
 
 
 export default function TopBar({ themeType, handleThemeChange }) {

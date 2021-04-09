@@ -4,7 +4,6 @@ import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import JobTile from "./JobTile";
-import testData from "./testData";
 import Container from "@material-ui/core/Container";
 import Card from '@material-ui/core/Card';
 import Divider from "@material-ui/core/Divider";
@@ -17,9 +16,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import RoomIcon from '@material-ui/icons/Room';
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { colors } from "./constants";
+import { colors } from "../helpers/constants";
 import SortIcon from '@material-ui/icons/Sort';
-import { DarkPurpleButton } from "./Button";
+import { DarkPurpleButton } from "./Buttons";
 import axios from "axios";
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
